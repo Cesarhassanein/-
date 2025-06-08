@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عوالم متقاطعة – CrossWorlds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .world-card {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid;
+            border-radius: 16px;
+        }
+        
+        .action-card {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            border-radius: 12px;
+        }
+        
+        .glow-fire {
+            animation: fireGlow 2s infinite alternate;
+            border-color: #f97316;
+        }
+        
+        .glow-shadow {
+            animation: shadowGlow 2s infinite alternate;
+            border-color: #7e22ce;
+        }
+        
+        .glow-time {
+            animation: timeGlow 2s infinite alternate;
+            border-color: #06b6d4;
+        }
+        
+        @keyframes fireGlow {
+            from { box-shadow: 0 0 5px rgba(249, 115, 22, 0.5); }
+            to { box-shadow: 0 0 20px rgba(249, 115, 22, 0.8); }
+        }
+        
+        @keyframes shadowGlow {
+            from { box-shadow: 0 0 5px rgba(126, 34, 206, 0.5); }
+            to { box-shadow: 0 0 20px rgba(126, 34, 206, 0.8); }
+        }
+        
+        @keyframes timeGlow {
+            from { box-shadow: 0 0 5px rgba(6, 182, 212, 0.5); }
+            to { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
+        }
+        
+        .heart {
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .flip-card {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+    </style>
+</head>
+<body class="text-right">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-cyan-400 mb-4">عوالم متقاطعة – CrossWorlds</h1>
+            <p class="text-xl md:text-2xl text-gray-300">لعبة استراتيجية بين عوالم خيالية!</p>
+        </header>
+        
+        <!-- Tabs -->
+        <div class="flex justify-center mb-8">
+            <div class="tabs-container inline-flex rounded-lg bg-gray-800 p-1">
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="about">عن اللعبة</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="worlds">العوالم</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="cards">البطاقات</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="gameplay">طريقة اللعب</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="demo">تجربة اللعبة</button>
+            </div>
+        </div>
+        
+        <!-- Tab Contents -->
+        <div class="tab-content active fade-in" id="about">
+            <div class="max-w-4xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="md:w-1/2">
+                        <img src="https://images.unsplash.com/photo-1533997658426-6470ea814a5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="CrossWorlds Game" class="rounded-xl shadow-lg w-full h-auto">
+                    </div>
+                    <div class="md:w-1/2">
+                        <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-4">عن اللعبة</h2>
+                        <p class="mb-4 text-gray-300">لعبة "عوالم متقاطعة – CrossWorlds" هي لعبة استراتيجية ممتعة لـ3 لاعبين، حيث يمتلك كل لاعب عالمًا خياليًا بقدرات فريدة ويسعى لتدمير عوالم اللاعبين الآخرين.</p>
+                        <p class="mb-4 text-gray-300">استخدم بطاقات التأثير القوية، ودمج قدرات العوالم، وأحداث الفوضى لتصبح آخر لاعب يقف!</p>
+                        <div class="bg-gray-700 p-4 rounded-lg border-l-4 border-orange-500">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">الهدف:</h3>
+                            <p>تكون آخر عالم باقٍ عن طريق تدمير عوالم الخصوم أو الحصول على أعلى نقاط طاقة بعد 10 جولات.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-users text-2xl text-pink-500 mr-2"></i>
+                            <h3 class="font-bold text-lg">عدد اللاعبين</h3>
+                        </div>
+                        <p class="text-gray-300">3 لاعبين فقط (يمكنك وصديقين)</p>
+                    </div>
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-clock text-2xl text-cyan-400 mr-2"></i>
+                            <h3 class="font-bold text-lg">مدة اللعبة</h3>
+                        </div>
+                        <p class="text-gray-300">20-30 دقيقة لكل جلسة</p>
+                    </div>
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-brain text-2xl text-purple-500 mr-2"></i>
+                            <h3 class="font-bold text-lg">المستوى</h3>
+                        </div>
+                        <p class="text-gray-300">سهلة التعلم لكنها تتطلب استراتيجية</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="worlds">
+            <div class="max-w-6xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">عوالم اللعبة</h2>
+                <p class="mb-8 text-center text-gray-300 max-w-3xl mx-auto">اختر عالمك المفضل واستغل قوته الخاصة لتدمير عوالم الخصوم! كل عالم لديه قدرة فريدة تغير مجرى اللعبة.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Fire World -->
+                    <div class="world-card glow-fire p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-orange-600 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                            عالم النار
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <i class="fas fa-fire text-6xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-4 text-orange-400">عالم النار</h3>
+                        <p class="text-gray-300 mb-4">هذا العالم مشتعل بالقوة المدمرة للنار</p>
+                        <div class="bg-orange-900/50 p-3 rounded-lg">
+                            <h4 class="font-bold text-orange-300 mb-1">القدرة الخاصة:</h4>
+                            <p class="text-sm">إذا هجمت مرتين متتالية، الضربة الثالثة تصير ×2</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Shadow World -->
+                    <div class="world-card glow-shadow p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-purple-600 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                            عالم الظل
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <i class="fas fa-moon text-6xl text-purple-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-4 text-purple-400">عالم الظل</h3>
+                        <p class="text-gray-300 mb-4">عالم من الظلام والاختفاء</p>
+                        <div class="bg-purple-900/50 p-3 rounded-lg">
+                            <h4 class="font-bold text-purple-300 mb-1">القدرة الخاصة:</h4>
+                            <p class="text-sm">أول مرة تتعرض لهجوم، تتلاشى (الهجوم ينلغي)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Time World -->
+                    <div class="world-card glow-time p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-cyan-600 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                            عالم الزمن
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <i class="fas fa-clock text-6xl text-cyan-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-4 text-cyan-400">عالم الزمن</h3>
+                        <p class="text-gray-300 mb-4">هذا العالم يتحكم في تدفق الزمن</p>
+                        <div class="bg-cyan-900/50 p-3 rounded-lg">
+                            <h4 class="font-bold text-cyan-300 mb-1">القدرة الخاصة:</h4>
+                            <p class="text-sm">تقدر تأجل دورك وتلعب مرتين بالجولة القادمة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-gray-900/70 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-center mb-4 text-yellow-400">خصائص العوالم</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-700">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">الرمز</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">اسم العالم</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">القوة الخاصة</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-gray-800/50 divide-y divide-gray-700">
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-fire text-orange-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عالم النار</td>
+                                    <td class="px-4 py-4">إذا هجمت مرتين متتالية، الضربة الثالثة تصير ×2</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-moon text-purple-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عالم الظل</td>
+                                    <td class="px-4 py-4">أول مرة تتعرض لهجوم، تتلاشى (الهجوم ينلغي)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-clock text-cyan-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عالم الزمن</td>
+                                    <td class="px-4 py-4">تقدر تأجل دورك وتلعب مرتين بالجولة القادمة</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="cards">
+            <div class="max-w-6xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">بطاقات التأثير</h2>
+                <p class="mb-8 text-center text-gray-300 max-w-3xl mx-auto">اجمع هذه البطاقات لاستخدامها أثناء اللعبة. كل بطاقة تمتلك تأثيرًا قويًا يمكن أن يغير مجرى اللعبة!</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Attack Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-lg">هجوم</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-swords text-4xl text-red-500 mb-3"></i>
+                                <h3 class="text-lg font-bold">هجوم مباشر</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🗡️ هجوم مباشر</h3>
+                            <p class="text-sm text-gray-300">اختر لاعب وسبب له ضرر نقطة واحدة من الطاقة</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Shield Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 text-xs font-bold rounded-lg">دفاع</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-shield text-4xl text-blue-400 mb-3"></i>
+                                <h3 class="text-lg font-bold">درع</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🧱 درع</h3>
+                            <p class="text-sm text-gray-300">تلغي أول هجوم يصيبك خلال هذا الدور</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Merge Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 text-xs font-bold rounded-lg">خاص</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-merge text-4xl text-purple-500 mb-3"></i>
+                                <h3 class="text-lg font-bold">دمج</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🔁 دمج</h3>
+                            <p class="text-sm text-gray-300">تدمج قدرة عالمك مع عالم آخر لدور واحد</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Collapse Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 text-xs font-bold rounded-lg">فوضى</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-explosion text-4xl text-yellow-500 mb-3"></i>
+                                <h3 class="text-lg font-bold">انهيار عوالم</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🌀 انهيار عوالم</h3>
+                            <p class="text-sm text-gray-300">الكل يعيد ترتيب بطاقاته (يصير خربطة)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reveal Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 text-xs font-bold rounded-lg">استكشاف</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-eye text-4xl text-green-400 mb-3"></i>
+                                <h3 class="text-lg font-bold">كشف</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🧠 كشف</h3>
+                            <p class="text-sm text-gray-300">تشوف البطاقات المخفية عند لاعب معيّن</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reverse Time Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-cyan-600 text-white px-2 py-1 text-xs font-bold rounded-lg">زمن</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-clock-rotate-left text-4xl text-cyan-400 mb-3"></i>
+                                <h3 class="text-lg font-bold">عكس الزمن</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🔄 عكس الزمن</h3>
+                            <p class="text-sm text-gray-300">تبطل تأثير آخر كرت لعبه أي لاعب</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-gray-900/70 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-center mb-4 text-yellow-400">قائمة البطاقات الكاملة</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-700">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">الرمز</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">النوع</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">التأثير</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-gray-800/50 divide-y divide-gray-700">
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-swords text-red-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">هجوم مباشر</td>
+                                    <td class="px-4 py-4">تهاجم عالم وتسبب ضرر (نقطة وحدة)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-shield text-blue-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">درع</td>
+                                    <td class="px-4 py-4">تلغي أول هجوم يصيبك</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-merge text-purple-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">دمج</td>
+                                    <td class="px-4 py-4">تدمج قدرة عالمك مع عالم ثاني لدور واحد</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-explosion text-yellow-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">انهيار عوالم</td>
+                                    <td class="px-4 py-4">الكل يعيد ترتيب بطاقاته (يصير خربطة)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-eye text-green-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">كشف</td>
+                                    <td class="px-4 py-4">تشوف البطاقات المخفية عند لاعب معيّن</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-clock-rotate-left text-cyan-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عكس الزمن</td>
+                                    <td class="px-4 py-4">تبطل تأثير آخر كرت لعبه أي لاعب</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="gameplay">
+            <div class="max-w-5xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">طريقة اللعب</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-orange-400 mb-4 border-b border-orange-600 pb-2">تحضير اللعبة</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">1</span>
+                                <span>كل لاعب يختار عالمًا واحدًا ويأخذ بطاقته</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">2</span>
+                                <span>كل لاعب يحصل على 4 نقاط طاقة (قلوب أو أحجار)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">3</span>
+                                <span>توزع 3 بطاقات تأثير لكل لاعب</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">4</span>
+                                <span>يتم وضع باقي البطاقات في وسط الطاولة كمكدس للسحب</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">5</span>
+                                <span>يحدد أول لاعب (يمكن اختياره عشوائيًا)</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-purple-400 mb-4 border-b border-purple-600 pb-2">مراحل الدور</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">1</span>
+                                <span><strong>سحب بطاقة:</strong> يسحب كل لاعب بطاقة تأثير من المكدس</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">2</span>
+                                <span><strong>استخدام البطاقات:</strong> يمكن للاعب لعب أو حفظ بطاقة (الحد الأقصى للاحتفاظ: 2 بطاقة)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">3</span>
+                                <span><strong>تنفيذ التأثيرات:</strong> يتم تطبيق تأثيرات البطاقات المستخدمة حسب نصها</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">4</span>
+                                <span><strong>استخدام القدرة الخاصة:</strong> يمكن للاعب استخدام قدرة عالمه إذا كانت شروطها متحققة</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">5</span>
+                                <span><strong>إنهاء الدور:</strong> ينتهي دور اللاعب ويمرر الدور للاعب التالي</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-cyan-400 mb-4 border-b border-cyan-600 pb-2 text-center">مثال على جولة لعب</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Player 1 Example -->
+                        <div class="bg-gray-700/50 p-4 rounded-lg border-l-4 border-orange-500">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-orange-500 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">1</div>
+                                <h4 class="font-bold text-orange-300">اللاعب 1 (عالم النار)</h4>
+                            </div>
+                            <ul class="list-disc list-inside text-gray-300 pl-2">
+                                <li>عنده كرت هجوم 🗡️</li>
+                                <li>يستخدمه ضد اللاعب 2 (عالم الظل)</li>
+                                <li>عالم الظل أول مرة يتعرض لهجوم → يتلاشى! (ما يصيبه شيء)</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Player 2 Example -->
+                        <div class="bg-gray-700/50 p-4 rounded-lg border-l-4 border-purple-500">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-purple-500 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">2</div>
+                                <h4 class="font-bold text-purple-300">اللاعب 2 (عالم الظل)</h4>
+                            </div>
+                            <ul class="list-disc list-inside text-gray-300 pl-2">
+                                <li>يسحب كرت دمج 🔁</li>
+                                <li>يختار دمج قدرته مع "عالم الزمن"</li>
+                                <li>الآن يقدر يتلاشى + يلعب مرتين بالدور الجاي!</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Player 3 Example -->
+                        <div class="bg-gray-700/50 p-4 rounded-lg border-l-4 border-cyan-500">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-cyan-500 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">3</div>
+                                <h4 class="font-bold text-cyan-300">اللاعب 3 (عالم الزمن)</h4>
+                            </div>
+                            <ul class="list-disc list-inside text-gray-300 pl-2">
+                                <li>يسحب كرت "عكس الزمن 🔄"</li>
+                                <li>يستخدمه لإلغاء الدمج اللي سواه اللاعب 2</li>
+                                <li>اللاعب 2 يفقد ميزة الدمج 😬</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-900/70 p-4 rounded-lg">
+                        <h4 class="font-bold text-yellow-400 mb-2">أدوات اللعب</h4>
+                        <ul class="list-disc list-inside text-gray-300 pl-2 space-y-1">
+                            <li>3 أوراق تمثل العوالم</li>
+                            <li>30-40 كرت تأثير</li>
+                            <li>حجارة أو علامات للنقاط</li>
+                            <li>ورقة لتسجيل الأحداث</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-900/70 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">قوانين خاصة</h4>
+                        <ul class="list-disc list-inside text-gray-300 pl-2 space-y-1">
+                            <li>لا يمكن الاحتفاظ بأكثر من كرتين</li>
+                            <li>إذا نفذت بطاقات السحب، يعاد خلط البطاقات المستهلكة</li>
+                            <li>لعبة الزمن لا يمكن إلغاءها</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-900/70 p-4 rounded-lg">
+                        <h4 class="font-bold text-red-400 mb-2">طرق الفوز</h4>
+                        <ul class="list-disc list-inside text-gray-300 pl-2 space-y-1">
+                            <li>البقاء الوحيد بنقاط طاقة</li>
+                            <li>أعلى نقاط بعد 10 جولات</li>
+                            <li>إذا تعادلت النقاط، يفوز صاحب أقوى بطاقات</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="demo">
+            <div class="max-w-5xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">تجربة اللعبة</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-pink-400 mb-4">اختر عالمك</h3>
+                        <div class="space-y-4" id="world-selection">
+                            <div class="world-card glow-fire p-4 cursor-pointer flex items-center" onclick="selectWorld('fire')">
+                                <i class="fas fa-fire text-3xl text-orange-500 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">عالم النار</h4>
+                                    <p class="text-sm text-gray-400">قوة هجوم مضاعفة</p>
+                                </div>
+                            </div>
+                            <div class="world-card glow-shadow p-4 cursor-pointer flex items-center" onclick="selectWorld('shadow')">
+                                <i class="fas fa-moon text-3xl text-purple-500 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">عالم الظل</h4>
+                                    <p class="text-sm text-gray-400">الاختفاء من الهجوم الأول</p>
+                                </div>
+                            </div>
+                            <div class="world-card glow-time p-4 cursor-pointer flex items-center" onclick="selectWorld('time')">
+                                <i class="fas fa-clock text-3xl text-cyanThis is the content of the file `index.html` for the CrossWorlds game:
+
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عوالم متقاطعة – CrossWorlds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        
+        .card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .world-card {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid;
+            border-radius: 16px;
+        }
+        
+        .action-card {
+            background: linear-gradient(145deg, #334155 0%, #1e293b 100%);
+            border-radius: 12px;
+        }
+        
+        .glow-fire {
+            animation: fireGlow 2s infinite alternate;
+            border-color: #f97316;
+        }
+        
+        .glow-shadow {
+            animation: shadowGlow 2s infinite alternate;
+            border-color: #7e22ce;
+        }
+        
+        .glow-time {
+            animation: timeGlow 2s infinite alternate;
+            border-color: #06b6d4;
+        }
+        
+        @keyframes fireGlow {
+            from { box-shadow: 0 0 5px rgba(249, 115, 22, 0.5); }
+            to { box-shadow: 0 0 20px rgba(249, 115, 22, 0.8); }
+        }
+        
+        @keyframes shadowGlow {
+            from { box-shadow: 0 0 5px rgba(126, 34, 206, 0.5); }
+            to { box-shadow: 0 0 20px rgba(126, 34, 206, 0.8); }
+        }
+        
+        @keyframes timeGlow {
+            from { box-shadow: 0 0 5px rgba(6, 182, 212, 0.5); }
+            to { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
+        }
+        
+        .heart {
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .flip-card {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+    </style>
+</head>
+<body class="text-right">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-cyan-400 mb-4">عوالم متقاطعة – CrossWorlds</h1>
+            <p class="text-xl md:text-2xl text-gray-300">لعبة استراتيجية بين عوالم خيالية!</p>
+        </header>
+        
+        <!-- Tabs -->
+        <div class="flex justify-center mb-8">
+            <div class="tabs-container inline-flex rounded-lg bg-gray-800 p-1">
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="about">عن اللعبة</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="worlds">العوالم</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="cards">البطاقات</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="gameplay">طريقة اللعب</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium transition-all" data-tab="demo">تجربة اللعبة</button>
+            </div>
+        </div>
+        
+        <!-- Tab Contents -->
+        <div class="tab-content active fade-in" id="about">
+            <div class="max-w-4xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="md:w-1/2">
+                        <img src="https://images.unsplash.com/photo-1533997658426-6470ea814a5e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="CrossWorlds Game" class="rounded-xl shadow-lg w-full h-auto">
+                    </div>
+                    <div class="md:w-1/2">
+                        <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-4">عن اللعبة</h2>
+                        <p class="mb-4 text-gray-300">لعبة "عوالم متقاطعة – CrossWorlds" هي لعبة استراتيجية ممتعة لـ3 لاعبين، حيث يمتلك كل لاعب عالمًا خياليًا بقدرات فريدة ويسعى لتدمير عوالم اللاعبين الآخرين.</p>
+                        <p class="mb-4 text-gray-300">استخدم بطاقات التأثير القوية، ودمج قدرات العوالم، وأحداث الفوضى لتصبح آخر لاعب يقف!</p>
+                        <div class="bg-gray-700 p-4 rounded-lg border-l-4 border-orange-500">
+                            <h3 class="font-bold text-lg text-orange-400 mb-2">الهدف:</h3>
+                            <p>تكون آخر عالم باقٍ عن طريق تدمير عوالم الخصوم أو الحصول على أعلى نقاط طاقة بعد 10 جولات.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-users text-2xl text-pink-500 mr-2"></i>
+                            <h3 class="font-bold text-lg">عدد اللاعبين</h3>
+                        </div>
+                        <p class="text-gray-300">3 لاعبين فقط (يمكنك وصديقين)</p>
+                    </div>
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-clock text-2xl text-cyan-400 mr-2"></i>
+                            <h3 class="font-bold text-lg">مدة اللعبة</h3>
+                        </div>
+                        <p class="text-gray-300">20-30 دقيقة لكل جلسة</p>
+                    </div>
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-brain text-2xl text-purple-500 mr-2"></i>
+                            <h3 class="font-bold text-lg">المستوى</h3>
+                        </div>
+                        <p class="text-gray-300">سهلة التعلم لكنها تتطلب استراتيجية</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="worlds">
+            <div class="max-w-6xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">عوالم اللعبة</h2>
+                <p class="mb-8 text-center text-gray-300 max-w-3xl mx-auto">اختر عالمك المفضل واستغل قوته الخاصة لتدمير عوالم الخصوم! كل عالم لديه قدرة فريدة تغير مجرى اللعبة.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Fire World -->
+                    <div class="world-card glow-fire p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-orange-600 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                            عالم النار
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <i class="fas fa-fire text-6xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-4 text-orange-400">عالم النار</h3>
+                        <p class="text-gray-300 mb-4">هذا العالم مشتعل بالقوة المدمرة للنار</p>
+                        <div class="bg-orange-900/50 p-3 rounded-lg">
+                            <h4 class="font-bold text-orange-300 mb-1">القدرة الخاصة:</h4>
+                            <p class="text-sm">إذا هجمت مرتين متتالية، الضربة الثالثة تصير ×2</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Shadow World -->
+                    <div class="world-card glow-shadow p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-purple-600 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                            عالم الظل
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <i class="fas fa-moon text-6xl text-purple-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-4 text-purple-400">عالم الظل</h3>
+                        <p class="text-gray-300 mb-4">عالم من الظلام والاختفاء</p>
+                        <div class="bg-purple-900/50 p-3 rounded-lg">
+                            <h4 class="font-bold text-purple-300 mb-1">القدرة الخاصة:</h4>
+                            <p class="text-sm">أول مرة تتعرض لهجوم، تتلاشى (الهجوم ينلغي)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Time World -->
+                    <div class="world-card glow-time p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-cyan-600 text-white px-3 py-1 text-xs font-bold rounded-bl-lg">
+                            عالم الزمن
+                        </div>
+                        <div class="flex justify-center mb-4">
+                            <i class="fas fa-clock text-6xl text-cyan-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-4 text-cyan-400">عالم الزمن</h3>
+                        <p class="text-gray-300 mb-4">هذا العالم يتحكم في تدفق الزمن</p>
+                        <div class="bg-cyan-900/50 p-3 rounded-lg">
+                            <h4 class="font-bold text-cyan-300 mb-1">القدرة الخاصة:</h4>
+                            <p class="text-sm">تقدر تأجل دورك وتلعب مرتين بالجولة القادمة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-gray-900/70 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-center mb-4 text-yellow-400">خصائص العوالم</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-700">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">الرمز</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">اسم العالم</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">القوة الخاصة</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-gray-800/50 divide-y divide-gray-700">
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-fire text-orange-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عالم النار</td>
+                                    <td class="px-4 py-4">إذا هجمت مرتين متتالية، الضربة الثالثة تصير ×2</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-moon text-purple-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عالم الظل</td>
+                                    <td class="px-4 py-4">أول مرة تتعرض لهجوم، تتلاشى (الهجوم ينلغي)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-clock text-cyan-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عالم الزمن</td>
+                                    <td class="px-4 py-4">تقدر تأجل دورك وتلعب مرتين بالجولة القادمة</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="cards">
+            <div class="max-w-6xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">بطاقات التأثير</h2>
+                <p class="mb-8 text-center text-gray-300 max-w-3xl mx-auto">اجمع هذه البطاقات لاستخدامها أثناء اللعبة. كل بطاقة تمتلك تأثيرًا قويًا يمكن أن يغير مجرى اللعبة!</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Attack Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 text-xs font-bold rounded-lg">هجوم</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-swords text-4xl text-red-500 mb-3"></i>
+                                <h3 class="text-lg font-bold">هجوم مباشر</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🗡️ هجوم مباشر</h3>
+                            <p class="text-sm text-gray-300">اختر لاعب وسبب له ضرر نقطة واحدة من الطاقة</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Shield Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 text-xs font-bold rounded-lg">دفاع</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-shield text-4xl text-blue-400 mb-3"></i>
+                                <h3 class="text-lg font-bold">درع</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🧱 درع</h3>
+                            <p class="text-sm text-gray-300">تلغي أول هجوم يصيبك خلال هذا الدور</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Merge Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 text-xs font-bold rounded-lg">خاص</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-merge text-4xl text-purple-500 mb-3"></i>
+                                <h3 class="text-lg font-bold">دمج</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🔁 دمج</h3>
+                            <p class="text-sm text-gray-300">تدمج قدرة عالمك مع عالم آخر لدور واحد</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Collapse Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-yellow-600 text-white px-2 py-1 text-xs font-bold rounded-lg">فوضى</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-explosion text-4xl text-yellow-500 mb-3"></i>
+                                <h3 class="text-lg font-bold">انهيار عوالم</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🌀 انهيار عوالم</h3>
+                            <p class="text-sm text-gray-300">الكل يعيد ترتيب بطاقاته (يصير خربطة)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reveal Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 text-xs font-bold rounded-lg">استكشاف</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-eye text-4xl text-green-400 mb-3"></i>
+                                <h3 class="text-lg font-bold">كشف</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🧠 كشف</h3>
+                            <p class="text-sm text-gray-300">تشوف البطاقات المخفية عند لاعب معيّن</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reverse Time Card -->
+                    <div class="flip-card h-48 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="card-front action-card h-full p-4 relative">
+                            <div class="absolute top-2 right-2 bg-cyan-600 text-white px-2 py-1 text-xs font-bold rounded-lg">زمن</div>
+                            <div class="flex flex-col items-center justify-center h-full">
+                                <i class="fas fa-clock-rotate-left text-4xl text-cyan-400 mb-3"></i>
+                                <h3 class="text-lg font-bold">عكس الزمن</h3>
+                            </div>
+                        </div>
+                        <div class="card-back h-full p-4">
+                            <h3 class="text-center font-bold mb-3">🔄 عكس الزمن</h3>
+                            <p class="text-sm text-gray-300">تبطل تأثير آخر كرت لعبه أي لاعب</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-gray-900/70 p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-center mb-4 text-yellow-400">قائمة البطاقات الكاملة</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-700">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">الرمز</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">النوع</th>
+                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">التأثير</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-gray-800/50 divide-y divide-gray-700">
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-swords text-red-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">هجوم مباشر</td>
+                                    <td class="px-4 py-4">تهاجم عالم وتسبب ضرر (نقطة وحدة)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-shield text-blue-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">درع</td>
+                                    <td class="px-4 py-4">تلغي أول هجوم يصيبك</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-merge text-purple-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">دمج</td>
+                                    <td class="px-4 py-4">تدمج قدرة عالمك مع عالم ثاني لدور واحد</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-explosion text-yellow-500"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">انهيار عوالم</td>
+                                    <td class="px-4 py-4">الكل يعيد ترتيب بطاقاته (يصير خربطة)</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-eye text-green-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">كشف</td>
+                                    <td class="px-4 py-4">تشوف البطاقات المخفية عند لاعب معيّن</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-4 whitespace-nowrap"><i class="fas fa-clock-rotate-left text-cyan-400"></i></td>
+                                    <td class="px-4 py-4 whitespace-nowrap font-medium">عكس الزمن</td>
+                                    <td class="px-4 py-4">تبطل تأثير آخر كرت لعبه أي لاعب</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="gameplay">
+            <div class="max-w-5xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">طريقة اللعب</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-orange-400 mb-4 border-b border-orange-600 pb-2">تحضير اللعبة</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">1</span>
+                                <span>كل لاعب يختار عالمًا واحدًا ويأخذ بطاقته</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">2</span>
+                                <span>كل لاعب يحصل على 4 نقاط طاقة (قلوب أو أحجار)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">3</span>
+                                <span>توزع 3 بطاقات تأثير لكل لاعب</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">4</span>
+                                <span>يتم وضع باقي البطاقات في وسط الطاولة كمكدس للسحب</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">5</span>
+                                <span>يحدد أول لاعب (يمكن اختياره عشوائيًا)</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-purple-400 mb-4 border-b border-purple-600 pb-2">مراحل الدور</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">1</span>
+                                <span><strong>سحب بطاقة:</strong> يسحب كل لاعب بطاقة تأثير من المكدس</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">2</span>
+                                <span><strong>استخدام البطاقات:</strong> يمكن للاعب لعب أو حفظ بطاقة (الحد الأقصى للاحتفاظ: 2 بطاقة)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">3</span>
+                                <span><strong>تنفيذ التأثيرات:</strong> يتم تطبيق تأثيرات البطاقات المستخدمة حسب نصها</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">4</span>
+                                <span><strong>استخدام القدرة الخاصة:</strong> يمكن للاعب استخدام قدرة عالمه إذا كانت شروطها متحققة</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-1">5</span>
+                                <span><strong>إنهاء الدور:</strong> ينتهي دور اللاعب ويمرر الدور للاعب التالي</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-cyan-400 mb-4 border-b border-cyan-600 pb-2 text-center">مثال على جولة لعب</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Player 1 Example -->
+                        <div class="bg-gray-700/50 p-4 rounded-lg border-l-4 border-orange-500">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-orange-500 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">1</div>
+                                <h4 class="font-bold text-orange-300">اللاعب 1 (عالم النار)</h4>
+                            </div>
+                            <ul class="list-disc list-inside text-gray-300 pl-2">
+                                <li>عنده كرت هجوم 🗡️</li>
+                                <li>يستخدمه ضد اللاعب 2 (عالم الظل)</li>
+                                <li>عالم الظل أول مرة يتعرض لهجوم → يتلاشى! (ما يصيبه شيء)</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Player 2 Example -->
+                        <div class="bg-gray-700/50 p-4 rounded-lg border-l-4 border-purple-500">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-purple-500 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">2</div>
+                                <h4 class="font-bold text-purple-300">اللاعب 2 (عالم الظل)</h4>
+                            </div>
+                            <ul class="list-disc list-inside text-gray-300 pl-2">
+                                <li>يسحب كرت دمج 🔁</li>
+                                <li>يختار دمج قدرته مع "عالم الزمن"</li>
+                                <li>الآن يقدر يتلاشى + يلعب مرتين بالدور الجاي!</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Player 3 Example -->
+                        <div class="bg-gray-700/50 p-4 rounded-lg border-l-4 border-cyan-500">
+                            <div class="flex items-center mb-2">
+                                <div class="bg-cyan-500 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold mr-2">3</div>
+                                <h4 class="font-bold text-cyan-300">اللاعب 3 (عالم الزمن)</h4>
+                            </div>
+                            <ul class="list-disc list-inside text-gray-300 pl-2">
+                                <li>يسحب كرت "عكس الزمن 🔄"</li>
+                                <li>يستخدمه لإلغاء الدمج اللي سواه اللاعب 2</li>
+                                <li>اللاعب 2 يفقد ميزة الدمج 😬</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-900/70 p-4 rounded-lg">
+                        <h4 class="font-bold text-yellow-400 mb-2">أدوات اللعب</h4>
+                        <ul class="list-disc list-inside text-gray-300 pl-2 space-y-1">
+                            <li>3 أوراق تمثل العوالم</li>
+                            <li>30-40 كرت تأثير</li>
+                            <li>حجارة أو علامات للنقاط</li>
+                            <li>ورقة لتسجيل الأحداث</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-900/70 p-4 rounded-lg">
+                        <h4 class="font-bold text-green-400 mb-2">قوانين خاصة</h4>
+                        <ul class="list-disc list-inside text-gray-300 pl-2 space-y-1">
+                            <li>لا يمكن الاحتفاظ بأكثر من كرتين</li>
+                            <li>إذا نفذت بطاقات السحب، يعاد خلط البطاقات المستهلكة</li>
+                            <li>لعبة الزمن لا يمكن إلغاءها</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-900/70 p-4 rounded-lg">
+                        <h4 class="font-bold text-red-400 mb-2">طرق الفوز</h4>
+                        <ul class="list-disc list-inside text-gray-300 pl-2 space-y-1">
+                            <li>البقاء الوحيد بنقاط طاقة</li>
+                            <li>أعلى نقاط بعد 10 جولات</li>
+                            <li>إذا تعادلت النقاط، يفوز صاحب أقوى بطاقات</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content fade-in" id="demo">
+            <div class="max-w-5xl mx-auto bg-gray-800/50 rounded-xl p-6 shadow-xl backdrop-blur-sm">
+                <h2 class="text-2xl md:text-3xl font-bold text-cyan-400 mb-6 text-center">تجربة اللعبة</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-pink-400 mb-4">اختر عالمك</h3>
+                        <div class="space-y-4" id="world-selection">
+                            <div class="world-card glow-fire p-4 cursor-pointer flex items-center" onclick="selectWorld('fire')">
+                                <i class="fas fa-fire text-3xl text-orange-500 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">عالم النار</h4>
+                                    <p class="text-sm text-gray-400">قوة هجوم مضاعفة</p>
+                                </div>
+                            </div>
+                            <div class="world-card glow-shadow p-4 cursor-pointer flex items-center" onclick="selectWorld('shadow')">
+                                <i class="fas fa-moon text-3xl text-purple-500 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">عالم الظل</h4>
+                                    <p class="text-sm text-gray-400">الاختفاء من الهجوم الأول</p>
+                                </div>
+                            </div>
+                            <div class="world-card glow-time p-4 cursor-pointer flex items-center" onclick="selectWorld('time')">
+                                <i class="fas fa-clock text-3xl text-cyan-400 mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold">عالم الزمن</h4>
+                                    <p class="text-sm text-gray-400">لعب دورين متتالين</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="selected-world" class="mt-6 hidden">
+                            <h3 class="text-lg font-bold text-green-400 mb-2">عالمك المختار:</h3>
+                            <div id="world-display" class="world-card p-4 flex items-center">
+                                <!-- Will be filled by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold text-blue-400 mb-4">نقاط الطاقة</h3>
+                        <div class="bg-gray-900 p-4 rounded-lg">
+                            <p class="mb-4">كل لاعب يبدأ بـ 4 نقاط طاقة:</p>
+                            <div class="flex space-x-2 mb-6">
+                                <div class="heart text-red-500 text-2xl"><i class="fas fa-heart"></i></div>
+                                <div class="heart text-red-500 text-2xl"><i class="fas fa-heart"></i></div>
+                                <div class="heart text-red-500 text-2xl"><i class="fas fa-heart"></i></div>
+                                <div class="heart text-red-500 text-2xl"><i class="fas fa-heart"></i></div>
+                            </div>
+                            <p>تخسر نقاط الطاقة عندما:</p>
+                            <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
+                                <li>تتعرض لهجوم مباشر (نقطة واحدة)</li>
+                                <li>تتعرض لهجوم مضاعف (نقطتين)</li>
+                                <li>تفشل في الدفاع عن هجوم</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">جرب بطاقات التأثير</h3>
+                    <p class="mb-4">انقر على أي بطاقة لتقلبها وترى تأثيرها:</p>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="action-cards-demo">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-6 bg-gray-900/50 p-4 rounded-lg">
+                        <h4 class="font-bold text-blue-300 mb-3">محاكاة اللعب</h4>
+                        <div class="flex flex-col space-y-3">
+                            <button id="draw-card-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all">
+                                <i class="fas fa-plus-circle mr-2"></i>سحب بطاقة جديدة
+                            </button>
+                            <div id="hand-cards" class="flex flex-wrap gap-3">
+                                <!-- Player's hand cards will appear here -->
+                            </div>
+                            <div id="game-messages" class="mt-3 bg-gray-800 p-2 rounded text-sm text-gray-300">
+                                <!-- Game messages will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-orange-400 mb-4">حالة اللاعبين</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <!-- Player 1 -->
+                        <div class="world-card glow-fire p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold">عالم النار</h4>
+                                <div class="flex space-x-1" id="player1-health">
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>بطاقات: <span id="player1-cards">3</span></span>
+                                <span>القدرة: <span class="text-orange-400">متاحة</span></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Player 2 -->
+                        <div class="world-card glow-shadow p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold">عالم الظل</h4>
+                                <div class="flex space-x-1" id="player2-health">
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>بطاقات: <span id="player2-cards">3</span></span>
+                                <span>القدرة: <span class="text-purple-400">متاحة</span></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Player 3 -->
+                        <div class="world-card glow-time p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold">عالم الزمن</h4>
+                                <div class="flex space-x-1" id="player3-health">
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>بطاقات: <span id="player3-cards">3</span></span>
+                                <span>القدرة: <span class="text-cyan-400">متاحة</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-purple-900/20 p-6 rounded-xl border border-purple-700">
+                    <h3 class="text-xl font-bold text-purple-300 mb-4">تلميحات استراتيجية</h3>
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                        <li>احتفظ ببطاقة درع دائمًا للدفاع عن هجمات المفاجئة</li>
+                        <li>استخدم دمج العالم في الوقت المناسب لتحصل على مفاجآت قوية</li>
+                        <li>عالم الظل قوي في البداية، لكنه يصبح ضعيفًا بعد استخدام قدرته</li>
+                        <li>عالم الزمن ممتاز للتخطيط الطويل، لكنه يحتاج لاستراتيجية دقيقة</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-16 py-8 border-t border-gray-800 text-center text-gray-400">
+        <p>تم تصميم لعبة "عوالم متقاطعة – CrossWorlds" بأسلوب فريد ومناسب للعائلة والأصدقاء</p>
+        <p class="mt-2">صنع بكل ❤️ لتستمتعوا بأوقات ممتعة معًا!</p>
+    </footer>
+
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabBtns.forEach(b => b.classList.remove('bg-blue-600', 'text-white'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button
+                btn.classList.add('bg-blue-600', 'text-white');
+                
+                // Show corresponding content
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Set first tab as active initially
+        tabBtns[0].classList.add('bg-blue-600', 'text-white');
+        
+        // Initialize demo game
+        initDemoGame();
+        
+        // World selection functionality
+        function selectWorld(world) {
+            const worldSelection = document.getElementById('world-selection');
+            const selectedWorld = document.getElementById('selected-world');
+            const worldDisplay = document.getElementById('world-display');
+            
+            // Remove all selected classes first
+            worldSelection.querySelectorAll('.world-card').forEach(card => {
+                card.classList.remove('ring-4', 'ring-blue-500');
+            });
+            
+            // Add selected class to clicked world
+            event.currentTarget.classList.add('ring-4', 'ring-blue-500');
+            
+            // Display the selected world
+            selectedWorld.classList.remove('hidden');
+            worldDisplay.innerHTML = '';
+            
+            let worldName, worldIcon, worldColor, worldDesc;
+            
+            if (world === 'fire') {
+                worldName = 'عالم النار';
+                worldIcon = 'fa-fire';
+                worldColor = 'orange';
+                worldDesc = 'الضربة الثالثة بعد هجومين تصير ×2';
+            } else if (world === 'shadow') {
+                worldName = 'عالم الظل';
+                worldIcon = 'fa-moon';
+                worldColor = 'purple';
+                worldDesc = 'الاختفاء من الهجوم الأول';
+            } else if (world === 'time') {
+                worldName = 'عالم الزمن';
+                worldIcon = 'fa-clock';
+                worldColor = 'cyan';
+                worldDesc = 'تأجيل الدور واللعب مرتين بالجولة القادمة';
+            }
+            
+            worldDisplay.className = `world-card glow-${world} p-4 flex items-center`;
+            worldDisplay.innerHTML = `
+                <i class="fas ${worldIcon} text-4xl text-${worldColor}-500 mr-4"></i>
+                <div>
+                    <h3 class="text-xl font-bold text-${worldColor}-400">${worldName}</h3>
+                    <p class="text-sm text-gray-300">${worldDesc}</p>
+                </div>
+            `;
+        }
+        
+        // Player class
+        class Player {
+            constructor(world, health = 4) {
+                this.world = world;
+                this.health = health;
+                this.cards = 3;
+                this.abilityUsed = false;
+            }
+        }
+
+        // Game state
+        let gameState = {
+            players: [
+                new Player('fire'),
+                new Player('shadow'), 
+                new Player('time')
+            ],
+            currentPlayer: 0,
+            deck: [],
+            discardPile: []
+        };
+
+        // Initialize demo
+        function initDemoGame() {
+            // Shuffle action cards for deck
+            gameState.deck = [...actionCards];
+            shuffleDeck();
+            
+            updatePlayersUI();
+        }
+
+        function shuffleDeck() {
+            // Simple shuffle algorithm
+            for (let i = gameState.deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [gameState.deck[i], gameState.deck[j]] = [gameState.deck[j], gameState.deck[i]];
+            }
+        }
+
+        function updatePlayersUI() {
+            // Update health displays
+            gameState.players.forEach((player, index) => {
+                const healthEl = document.getElementById(`player${index+1}-health`);
+                healthEl.innerHTML = '';
+                
+                for (let i = 0; i < player.health; i++) {
+                    healthEl.innerHTML += '<i class="fas fa-heart text-red-500"></i>';
+                }
+                
+                document.getElementById(`player${index+1}-cards`).textContent = player.cards;
+            });
+        }
+
+        // Draw card button
+        document.getElementById('draw-card-btn').addEventListener('click', function() {
+            const messagesEl = document.getElementById('game-messages');
+            
+            if (gameState.deck.length === 0) {
+                messagesEl.textContent = "انتهت البطاقات في المكدس! يتم خلط البطاقات المستخدمة.";
+                shuffleDeck();
+                return;
+            }
+            
+            const card = gameState.deck.pop();
+            messagesEl.textContent = `لقد سحبت بطاقة: ${card.name}`;
+            
+            // Add card to hand
+            const handEl = document.getElementById('hand-cards');
+            const cardEl = document.createElement('div');
+            cardEl.className = 'flip-card h-20 w-16 cursor-pointer';
+            cardEl.innerHTML = `
+                <div class="card-front action-card h-full p-1 relative">
+                    <div class="absolute top-0 right-0 bg-${card.color}-600 text-white px-1 text-4xs font-bold rounded">${card.type}</div>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <i class="fas ${card.icon} text-lg text-${card.color}-500"></i>
+                    </div>
+                </div>
+                <div class="card-back h-full p-1">
+                    <p class="text-3xs text-center leading-tight mt-1">${card.name}</p>
+                </div>
+            `;
+            
+            cardEl.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+                messagesEl.textContent = `استخدمت بطاقة ${card.name}: ${card.desc}`;
+                
+                // Simple game effect example
+                if (card.type === 'هجوم') {
+                    const target = (gameState.currentPlayer + 1) % 3;
+                    gameState.players[target].health--;
+                    messagesEl.textContent += `\nاللاعب ${target+1} فقد نقطة طاقة!`;
+                }
+                
+                updatePlayersUI();
+                this.remove();
+            });
+            
+            handEl.appendChild(cardEl);
+        });
+
+        // Action cards demo
+        const actionCards = [
+            { type: 'هجوم', icon: 'fa-swords', color: 'red', name: 'هجوم مباشر', desc: 'تسبب ضرر نقطة واحدة للخصم' },
+            { type: 'دفاع', icon: 'fa-shield', color: 'blue', name: 'درع', desc: 'تلغي أول هجوم يصيبك' },
+            { type: 'خاص', icon: 'fa-merge', color: 'purple', name: 'دمج', desc: 'تدمج قدرة عالمك مع عالم آخر لدور واحد' },
+            { type: 'فوضى', icon: 'fa-explosion', color: 'yellow', name: 'انهيار عوالم', desc: 'الكل يعيد ترتيب بطاقاته' },
+            { type: 'استكشاف', icon: 'fa-eye', color: 'green', name: 'كشف', desc: 'تشوف البطاقات المخفية عند لاعب معيّن' },
+            { type: 'زمن', icon: 'fa-clock-rotate-left', color: 'cyan', name: 'عكس الزمن', desc: 'تبطل تأثير آخر كرت لعبه أي لاعب' }
+        ];
+        
+        const actionCardsDemo = document.getElementById('action-cards-demo');
+        
+        actionCards.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'flip-card h-32 cursor-pointer';
+            cardElement.innerHTML = `
+                <div class="card-front action-card h-full p-3 relative">
+                    <div class="absolute top-1 right-1 bg-${card.color}-600 text-white px-1 py-1 text-2xs font-bold rounded">${card.type}</div>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <i class="fas ${card.icon} text-2xl text-${card.color}-500"></i>
+                        <h3 class="text-sm font-bold mt-1">${card.name}</h3>
+                    </div>
+                </div>
+                <div class="card-back h-full p-3">
+                    <h3 class="text-center font-bold text-xs mb-1">${card.name}</h3>
+                    <p class="text-2xs text-gray-300">${card.desc}</p>
+                </div>
+            `;
+            
+            cardElement.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+            
+            actionCardsDemo.appendChild(cardElement);
+        });
+    </script>
+</body>
+</html>
